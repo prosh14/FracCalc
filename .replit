@@ -1,0 +1,2 @@
+language = "java10"
+run = "bash compile.sh; bash run.sh fracCalc.FracCalc"
