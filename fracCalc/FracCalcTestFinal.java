@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+// bash compile.sh; bash run.sh fracCalc.FracCalcTestFinal
+
 //Final fraccalc submission tests
 public class FracCalcTestFinal
 {
