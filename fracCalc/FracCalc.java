@@ -7,6 +7,7 @@ public class FracCalc {
   public static void main(String[] args) {
     // TODO: Read the input from the user and call produceAnswer with an equation
     String input = "";
+    System.out.println("Enter a mathematical statement with fractions or 'quit' to exit the program.");
     Scanner console = new Scanner(System.in);
     while (!(input.equals("quit"))) {
       System.out.print("Input: ");
@@ -251,7 +252,7 @@ public class FracCalc {
       }
 
       if (denominator == 0) {
-        string = "Invalid Fraction";
+        string = "Invalid Statement";
       }
     }
 
