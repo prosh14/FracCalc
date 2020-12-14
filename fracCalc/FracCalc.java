@@ -10,8 +10,7 @@ public class FracCalc {
     System.out.println("Enter a mathematical statement with fractions or 'quit' to exit the program.");
     Scanner console = new Scanner(System.in);
     while (!(input.equals("quit"))) {
-      System.out.print("Input: ");
-      input = console.nextLine();
+      System.out.print("Input: "); input = console.nextLine(); // Takes input
       System.out.println(produceAnswer(input));
       System.out.println();
     }
@@ -36,8 +35,14 @@ public class FracCalc {
       return "You have exited the program!";
     }
 
+    //processes input into operands, then runs operations
     String[] operands = input.split(" ");
-    Frac result = new Frac(operands[0]);
+    if(operands.length == 1)
+    {
+      return "Invalid Input";
+    }
+
+    Frac result = new Frac(operands[0]); // Makes a new Frac object that will be returned as the result of the input
     for(int i = 2; i < operands.length; i+=2)
     {
       result.calcFrac(new Frac(operands[i]), operands[i-1]);
@@ -49,7 +54,7 @@ public class FracCalc {
   // TODO: Fill in the space below with any helper methods that you think you will
   // need
 
-  // Parses strings into their int forms
+  // Parses strings into their int values
   public static int parseInt(String string)
   {
     int num = 0;
@@ -66,7 +71,8 @@ public class FracCalc {
     for(int i = 0; i < string.length(); i++)
     {
       char character = string.charAt(i);
-      isValid = Character.isDigit(character);
+      int asciiValue = (int)character;
+      isValid = (asciiValue >= 48 && asciiValue <= 57) && isValid; // Records whether the character is a valid digit
 
       if(isValid){
         num += ((int)character - 48) * Math.pow(10, string.length()-i-1);
@@ -78,20 +84,22 @@ public class FracCalc {
       num *= sign;
       return num;
     } else {
+      System.out.println("Invalid Statement");
       return 0;
     }
     
   }
 
+  // Represents a fraction
   static class Frac {
     int whole;
     int numerator;
     int denominator;
-    boolean isPositive;
-    String string;
-    String[] splitFrac;
+    boolean isPositive; // stores the sign of the fraction
+    String string; // String representation of the fraction
+    String[] splitFrac; // Array of whole, numerator, denominator as Strings
 
-    // Constructors
+    // Constructor
     public Frac(String frac) {
       splitFrac = splitFractionString(frac);
       whole = parseInt(splitFrac[0]);
@@ -105,8 +113,6 @@ public class FracCalc {
       }
       
       simplify();
-      //System.out.println("New: " + (boolean)(whole > 0) + ", " + whole);
-
     }
 
     // Operation Method
@@ -147,7 +153,7 @@ public class FracCalc {
         numerator *= fracTwo.denominator;
         denominator *= fracTwo.numerator;
       }
-      if(operator.equals("*") || operator.equals("/"))
+      if(operator.equals("*") || operator.equals("/")) // Adjusts sign based on the signs of the operands
       {
         if((isPositive && !fracTwo.isPositive) || (!isPositive && fracTwo.isPositive))
         {
@@ -157,7 +163,7 @@ public class FracCalc {
         }
         if(numerator == 0)
         {
-          isPositive = true; //Not really
+          isPositive = true;
         }
       }
 
@@ -167,18 +173,18 @@ public class FracCalc {
     public String[] splitFractionString(String frac) {
       String[] fracArray = new String[3]; // Stores whole, numerator, and denominator as Strings
       if (frac.contains("_")) {
-        String[] wholeAndFrac = frac.split("_"); // Splits frac into whole and frac;
+        String[] wholeAndFrac = frac.split("_"); // Splits frac into whole and fractional part;
         fracArray[0] = wholeAndFrac[0]; // Sets first index of fracArray to the first index of wholeAndFrac
         String[] NumAndDen = wholeAndFrac[1].split("/"); // Numerator and denominator as Strings in an Array
         fracArray[1] = NumAndDen[0]; // Add numerator to fracArray
         fracArray[2] = NumAndDen[1]; // Add denominator to fracArray
       } else {
-        if (frac.contains("/")) {
+        if (frac.contains("/")) { // If no whole number is given, check for a fraction
           fracArray[0] = "0";
           String[] splitFrac = frac.split("/");
           fracArray[1] = splitFrac[0];
           fracArray[2] = splitFrac[1];
-        } else {
+        } else { // if no fraction, the default fractional part is 0/1. Ex: 6 is set as 6_0/1
           fracArray[0] = frac;
           fracArray[1] = "0";
           fracArray[2] = "1";
@@ -189,6 +195,8 @@ public class FracCalc {
     }
 
     public void simplify() {
+
+      // Takes the sign off of the whole or the numerator and stores it in in isPositive
       if ((!isPositive && (whole > 0) && (numerator > 0)) || isPositive && (whole < 0 || numerator < 0)) {
         whole = Math.abs(whole);
         numerator = Math.abs(numerator);
@@ -198,7 +206,6 @@ public class FracCalc {
         numerator = Math.abs(numerator);
         isPositive = true;
       }
-      //System.out.println("After: isPositive: " + isPositive + ", " + whole + "_" + numerator + "/" + denominator + ", ");
 
       while (numerator > denominator && denominator != 0) {
         numerator -= denominator;
@@ -216,11 +223,10 @@ public class FracCalc {
         whole++;
       }
 
-      
       updateStrings();
     }
 
-    // Rebuilds string variables with simplified values
+    // Rebuilds string variable with simplified values
     private void updateStrings() {
       string = "";
       splitFrac[0] = whole + "";
@@ -256,31 +262,12 @@ public class FracCalc {
       }
     }
 
+    // turns frac into an improper fraction
     public void makeImproper() {
-      //System.out.println("Before: " + string);
       simplify();
-      //System.out.println("After: " + string);
       numerator += whole * denominator;
       whole = 0;
       string = numerator + "/" + denominator;
-    }
-
-
-    // public boolean getSign(){
-    //   boolean newIsPositive = (whole > 0) && (numerator > 0);
-    //   return newIsPositive && isPositive;
-    // }
-
-    public void setWhole(int newWhole) {
-      whole = newWhole;
-    }
-
-    public void setNumerator(int newNumerator) {
-      numerator = newNumerator;
-    }
-
-    public void setDenominator(int newDenominator) {
-      denominator = newDenominator;
     }
 
     public String toString() {
