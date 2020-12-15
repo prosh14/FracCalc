@@ -245,7 +245,7 @@ public class FracCalc {
       }
 
       if (denominator == 0) {
-        string = "Invalid Statement";
+        string = "Invalid Input";
       }
     }
 
