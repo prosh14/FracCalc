@@ -10,7 +10,8 @@ public class FracCalc {
     System.out.println("Enter a mathematical statement with fractions or 'quit' to exit the program.");
     Scanner console = new Scanner(System.in);
     while (!(input.equals("quit"))) {
-      System.out.print("Input: "); input = console.nextLine(); // Takes input
+      System.out.print("Input: ");
+      input = console.nextLine(); // Takes input
       System.out.println(produceAnswer(input));
       System.out.println();
     }
@@ -35,17 +36,12 @@ public class FracCalc {
       return "You have exited the program!";
     }
 
-    //processes input into operands, then runs operations
+    // processes input into operands, then runs operations
     String[] operands = input.split(" ");
-    if(operands.length == 1)
-    {
-      return "Invalid Input";
-    }
-
     Frac result = new Frac(operands[0]); // Makes a new Frac object that will be returned as the result of the input
-    for(int i = 2; i < operands.length; i+=2)
-    {
-      result.calcFrac(new Frac(operands[i]), operands[i-1]);
+
+    for (int i = 2; i < operands.length; i += 2) {
+      result.calcFrac(new Frac(operands[i]), operands[i - 1]);
     }
 
     return result.string;
@@ -55,39 +51,35 @@ public class FracCalc {
   // need
 
   // Parses strings into their int values
-  public static int parseInt(String string)
-  {
+  public static int parseInt(String string) {
     int num = 0;
     int sign = 0;
     boolean isValid = true;
-    if(string.indexOf("-") == 0)
-    {
+    if (string.indexOf("-") == 0) {
       sign = -1;
       string = string.substring(1);
     } else {
       sign = 1;
     }
 
-    for(int i = 0; i < string.length(); i++)
-    {
+    for (int i = 0; i < string.length(); i++) {
       char character = string.charAt(i);
-      int asciiValue = (int)character;
+      int asciiValue = (int) character;
       isValid = (asciiValue >= 48 && asciiValue <= 57) && isValid; // Records whether the character is a valid digit
 
-      if(isValid){
-        num += ((int)character - 48) * Math.pow(10, string.length()-i-1);
+      if (isValid) {
+        num += ((int) character - 48) * Math.pow(10, string.length() - i - 1);
       }
     }
-    
-    if(isValid)
-    {
+
+    if (isValid) {
       num *= sign;
       return num;
     } else {
-      System.out.println("Invalid Statement");
+      // System.out.println("Invalid Statement");
       return 0;
     }
-    
+
   }
 
   // Represents a fraction
@@ -111,58 +103,53 @@ public class FracCalc {
         whole = Math.abs(whole);
         numerator = Math.abs(numerator);
       }
-      
+
       simplify();
     }
 
     // Operation Method
-    public void calcFrac(Frac fracTwo, String operator){
+    public void calcFrac(Frac fracTwo, String operator) {
       makeImproper();
       fracTwo.makeImproper();
 
-      if(operator.equals("+") || operator.equals("-")){
-        
-        if(!isPositive)
-        {
+      if (operator.equals("+") || operator.equals("-")) {
+
+        if (!isPositive) {
           numerator *= -1;
           isPositive = true;
         }
-        if(!fracTwo.isPositive)
-        {
+        if (!fracTwo.isPositive) {
           fracTwo.numerator *= -1;
           fracTwo.isPositive = true;
         }
 
-        if(operator.equals("-")){
+        if (operator.equals("-")) {
           fracTwo.numerator *= -1;
         }
         numerator = (numerator * fracTwo.denominator) + (fracTwo.numerator * denominator);
         denominator *= fracTwo.denominator;
 
-        if(numerator < 0)
-        {
+        if (numerator < 0) {
           numerator = Math.abs(numerator);
           isPositive = false;
         } else {
           isPositive = true;
         }
-      } else if (operator.equals("*")){
+      } else if (operator.equals("*")) {
         numerator *= fracTwo.numerator;
         denominator *= fracTwo.denominator;
-      } else if (operator.equals("/")){
+      } else if (operator.equals("/")) {
         numerator *= fracTwo.denominator;
         denominator *= fracTwo.numerator;
       }
-      if(operator.equals("*") || operator.equals("/")) // Adjusts sign based on the signs of the operands
+      if (operator.equals("*") || operator.equals("/")) // Adjusts sign based on the signs of the operands
       {
-        if((isPositive && !fracTwo.isPositive) || (!isPositive && fracTwo.isPositive))
-        {
+        if ((isPositive && !fracTwo.isPositive) || (!isPositive && fracTwo.isPositive)) {
           isPositive = false;
         } else {
           isPositive = true;
         }
-        if(numerator == 0)
-        {
+        if (numerator == 0) {
           isPositive = true;
         }
       }
@@ -196,12 +183,13 @@ public class FracCalc {
 
     public void simplify() {
 
-      // Takes the sign off of the whole or the numerator and stores it in in isPositive
+      // Takes the sign off of the whole or the numerator and stores it in in
+      // isPositive
       if ((!isPositive && (whole > 0) && (numerator > 0)) || isPositive && (whole < 0 || numerator < 0)) {
         whole = Math.abs(whole);
         numerator = Math.abs(numerator);
         isPositive = false;
-      } else if(!isPositive && (whole < 0 || numerator < 0)){
+      } else if (!isPositive && (whole < 0 || numerator < 0)) {
         whole = Math.abs(whole);
         numerator = Math.abs(numerator);
         isPositive = true;
@@ -252,8 +240,7 @@ public class FracCalc {
         string = "0";
       }
 
-      if(!isPositive)
-      {
+      if (!isPositive) {
         string = "-" + string;
       }
 
@@ -262,7 +249,7 @@ public class FracCalc {
       }
     }
 
-    // turns frac into an improper fraction
+    // Turns frac into an improper fraction
     public void makeImproper() {
       simplify();
       numerator += whole * denominator;
